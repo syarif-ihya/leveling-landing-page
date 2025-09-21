@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leveling App - Transformasi Hidup Melalui Gamifikasi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Ubah hidupmu menjadi petualangan nyata dengan Leveling App - Gamifikasi produktivitas personal">
+    <meta name="google-site-verification" content="LUgiVNlnnDEvlF3rcQEeg7tKZXEtz_lpQN6jSsrgJ48" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="hero">
+            <nav class="main-nav" id="mainNav">
+                <div class="logo">
+                    <img src="images/leveling-app-logo.png" alt="Logo Leveling App" class="logo-img">
+                    Leveling App
+                </div>
+                <div class="hamburger" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#features">Fitur</a></li>
+                    <li><a href="#screenshots">Tampilan</a></li>
+                    <li><a href="#testimonials">Testimoni</a></li>
+                    <li><a href="#download" class="nav-cta">Mulai Sekarang</a></li>
+                </ul>
+                <div class="mobile-overlay" id="mobileOverlay"></div>
+            </nav>
+        <div class="hero-content">
+            <h1 class="fade-in">Hidupmu, Level Selanjutnya</h1>
+            <p class="subheading fade-in">Transformasikan produktivitas seperti menaiki level di game RPG!</p>
+            <div class="hero-cta slide-up">
+                <a href="#download" class="btn-primary">📲 Mulai Perjalanan</a>
+                <a href="#features" class="btn-secondary">Pelajari Lebih Lanjut</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <div class="section-header">
+            <h2>🔥 Fitur Revolusioner</h2>
+            <p>Merubah tantangan hidup menjadi petualangan seru</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-box" data-tilt>
+                <div class="feature-icon">
+                    <img src="images/quest-icon.png" alt="Fitur Quest" />
+                </div>
+                <h3>Customize Quest</h3>
+                <p>Sistem quest yang dapat disesuaikan untuk memaksimalkan potensi pribadimu.</p>
+            </div>
+            <div class="feature-box" data-tilt>
+                <div class="feature-icon">
+                    <img src="images/skill-icon.webp" alt="Fitur Skill Tree" />
+                </div>
+                <h3>Attributes and Skills</h3>
+                <p>Kembangkan keahlianmu dengan sistem progression RPG yang inovatif.</p>
+            </div>
+            <div class="feature-box" data-tilt>
+                <div class="feature-icon">
+                    <img src="images/xp-icon.webp" alt="Fitur Reward" />
+                </div>
+                <h3>Reward Ecosystem</h3>
+                <p>Tukar Time Currency dengan hadiah digital dan penghargaan nyata.</p>
+            </div>
+            <div class="feature-box" data-tilt>
+                <div class="feature-icon">
+                    <img src="images/chart-icon.png" alt="Fitur Analitik" />
+                </div>
+                <h3>Analitik Pribadi</h3>
+                <p>Lacak perkembanganmu dengan dashboard intuitif dan mendalam.</p>
+            </div>
+            <div class="feature-box" data-tilt>
+                <div class="feature-icon">
+                    <img src="images/todo-icon.png" alt="Fitur TodoList" />
+                </div>
+                <h3>ToDo List</h3>
+                <p>Catat daftar tugas yang akan kamu lakukan.</p>
+            </div>
+            <div class="feature-box" data-tilt>
+                <div class="feature-icon">
+                    <img src="images/time-icon.png" alt="Fitur Item" />
+                </div>
+                <h3>Time Management</h3>
+                <p>Gunakan item bertipe TIMER sebagai alat memanajemen waktu.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots" class="screenshots">
+        <div class="section-header">
+            <h2>📱 Jelajahi Antarmuka</h2>
+            <p>Pengalaman gamifikasi yang mulus dan intuitif</p>
+        </div>
+        <div class="screenshot-gallery">
+            <div class="screenshot-item">
+                <img src="images/QuestScreen1.5.0.jpg" alt="Tampilan Quest Harian" loading="lazy">
+                <span>Quest List</span>
+            </div>
+            <div class="screenshot-item">
+                <img src="images/StatusScreen1.5.0.jpg" alt="Profil Pengguna" loading="lazy">
+                <span>Profil & Level</span>
+            </div>
+            <div class="screenshot-item">
+                <img src="images/ItemScreen1.5.0.jpg" alt="Toko Reward" loading="lazy">
+                <span>Inventaris dan Toko</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="section-header">
+            <h2>💬 Apa Kata Mereka</h2>
+            <p>Inspirasi dari komunitas pengguna kami</p>
+        </div>
+        <div class="testimonial-slider">
+            <div class="testimonial-card">
+                <p>"Leveling App mengubah cara saya melihat produktivitas. Sekarang hidup terasa seperti game yang menantang!"</p>
+                <div class="testimonial-author">
+                    <img src="images/Hinatashoyo.jpg" alt="Testimonial Avatar" loading="lazy">
+                    <span>Syarif, Developer LevelingApp</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="download">
+        <div class="download-content">
+            <h2>🚀 Siap Memulai Petualangan?</h2>
+            <p>Bergabunglah dengan ribuan pengguna yang telah mentransformasi hidupnya.</p>
+            <div class="download-buttons">
+                <a href="#" class="btn-primary">
+                    <img src="images/playstore-icon.svg" alt="Google Play" class="button-icon" />
+                    Google Play
+                </a>
+                <a href="#" class="btn-primary">
+                    <img src="images/apple-icon.png" alt="App Store" class="button-icon" />
+                    App Store
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <p>© 2025 Leveling App</p>
+            </div>
+            <div class="footer-links">
+                <a href="privacy.html">Privasi</a>
+                <a href="terms.html">Syarat</a>
+                <a href="mailto:shirin.dev.app@gmail.com">Kontak</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://instagram.com/levelingapp" target="_blank" rel="noopener">
+                    <img src="images/instagram-icon.webp" alt="Instagram" style="width:24px; height:24px;" />
+                </a>
+                <a href="https://www.tiktok.com/@levelingapp.xp" target="_blank" rel="noopener">
+                    <img src="images/tiktok-icon.svg" alt="TikTok" style="width:24px; height:24px;" />
+                </a>
+                <a href="https://discord.gg/jkTJ44tCwx" target="_blank" rel="noopener">
+                    <img src="images/discord-icon.png" alt="Discord" style="width:24px; height:24px;" />
+                </a>
+                <a href="https://drive.google.com/drive/folders/1zARf6wWe3akeQZwjjaogf814FpI2QJQM" target="_blank" rel="noopener">
+                    <img src="images/drive-icon.png" alt="Drive" style="width:24px; height:24px;" />
+                </a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // Enhanced animations and interactions
+document.addEventListener('DOMContentLoaded', () => {
+    // Hamburger menu functionality
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    
+    // Toggle mobile menu
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+            
+            // Toggle hamburger animation
+            menuToggle.classList.toggle('active');
+        });
+    }
+    
+    // Close menu when clicking on a link or overlay
+    const navLinksItems = document.querySelectorAll('.nav-links a');
+    navLinksItems.forEach(item => {
+        item.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+            if (menuToggle) menuToggle.classList.remove('active');
+        });
+    });
+    
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+            if (menuToggle) menuToggle.classList.remove('active');
+        });
+    }
+    
+    // Shrink navigation on scroll
+    const mainNav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            mainNav.classList.add('scrolled-nav');
+        } else {
+            mainNav.classList.remove('scrolled-nav');
+        }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                const navHeight = document.querySelector('.main-nav').offsetHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Track elements that have already been animated
+    const animatedElements = new Set();
+    
+    // Animate elements on scroll
+    const featureBoxes = document.querySelectorAll('.feature-box');
+    const screenshotItems = document.querySelectorAll('.screenshot-item');
+    const testimonialCard = document.querySelector('.testimonial-card');
+    
+    // Set initial state for scroll animations - but only do this once
+    featureBoxes.forEach(box => {
+        box.style.opacity = '0';
+        box.style.transform = 'translateY(30px)';
+        box.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    });
+    
+    screenshotItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    });
+    
+    if (testimonialCard) {
+        testimonialCard.style.opacity = '0';
+        testimonialCard.style.transform = 'translateY(30px)';
+        testimonialCard.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    }
+    
+    // Improved scroll-based animation function
+    const animateOnScroll = () => {
+        // Animate feature boxes if not already animated
+        featureBoxes.forEach(box => {
+            if (!animatedElements.has(box)) {
+                const boxPosition = box.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if(boxPosition < screenPosition) {
+                    box.style.opacity = '1';
+                    box.style.transform = 'translateY(0)';
+                    // Mark as animated so we don't re-animate
+                    animatedElements.add(box);
+                }
+            }
+        });
+        
+        // Animate screenshot items if not already animated
+        screenshotItems.forEach((item, index) => {
+            if (!animatedElements.has(item)) {
+                const itemPosition = item.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if(itemPosition < screenPosition) {
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                        // Mark as animated
+                        animatedElements.add(item);
+                    }, index * 200); // Staggered animation
+                }
+            }
+        });
+        
+        // Animate testimonial card if not already animated
+        if (testimonialCard && !animatedElements.has(testimonialCard)) {
+            const cardPosition = testimonialCard.getBoundingClientRect().top;
+            const screenPosition = window.innerHeight / 1.2;
+            
+            if(cardPosition < screenPosition) {
+                testimonialCard.style.opacity = '1';
+                testimonialCard.style.transform = 'translateY(0)';
+                // Mark as animated
+                animatedElements.add(testimonialCard);
+            }
+        }
+    };
+    
+    // Run animation check on scroll
+    window.addEventListener('scroll', animateOnScroll);
+    
+    // Run once on load to check for elements already in view
+    animateOnScroll();
+    
+    // Add hover effects to feature boxes
+    featureBoxes.forEach(box => {
+        let originalTransform = '';
+        
+        box.addEventListener('mouseenter', () => {
+            // Store the current transform before applying hover effect
+            originalTransform = box.style.transform;
+            
+            // Only apply hover effect if the box has already been animated
+            if (animatedElements.has(box)) {
+                box.style.transform = 'translateY(-10px)';
+            }
+        });
+        
+        box.addEventListener('mouseleave', () => {
+            // Revert to original transform (either the animated state or the initial state)
+            if (animatedElements.has(box)) {
+                box.style.transform = 'translateY(0)';
+            } else {
+                box.style.transform = originalTransform;
+            }
+        });
+    });
+    
+    // Add simple tilt effect to feature boxes (if not on mobile)
+    if (window.innerWidth > 768) {
+        featureBoxes.forEach(box => {
+            box.addEventListener('mousemove', (e) => {
+                // Only apply tilt effect if the box has already been animated
+                if (animatedElements.has(box)) {
+                    const boxRect = box.getBoundingClientRect();
+                    const boxCenterX = boxRect.left + boxRect.width / 2;
+                    const boxCenterY = boxRect.top + boxRect.height / 2;
+                    
+                    const xRotation = ((e.clientY - boxCenterY) / 10) * -1;
+                    const yRotation = (e.clientX - boxCenterX) / 10;
+                    
+                    box.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.05)`;
+                }
+            });
+            
+            box.addEventListener('mouseleave', () => {
+                // Revert to animated state (not initial state) if the box was animated
+                if (animatedElements.has(box)) {
+                    box.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                }
+            });
+        });
+    }
+    
+    // Function to ensure all elements are visible after page has been loaded for a while
+    // This is a safety measure to ensure elements don't stay hidden
+    const ensureVisibility = () => {
+        featureBoxes.forEach(box => {
+            box.style.opacity = '1';
+            box.style.transform = 'translateY(0)';
+            animatedElements.add(box);
+        });
+        
+        screenshotItems.forEach(item => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+            animatedElements.add(item);
+        });
+        
+        if (testimonialCard) {
+            testimonialCard.style.opacity = '1';
+            testimonialCard.style.transform = 'translateY(0)';
+            animatedElements.add(testimonialCard);
+        }
+    };
+    
+    // After a certain time, make sure all elements are visible (5 seconds)
+    setTimeout(ensureVisibility, 5000);
+    
+    // Add preloading for images
+    const preloadCriticalImages = () => {
+        const criticalImages = document.querySelectorAll('.hero img, .logo-img');
+        criticalImages.forEach(img => {
+            const src = img.getAttribute('src');
+            if (src) {
+                const preloadLink = document.createElement('link');
+                preloadLink.rel = 'preload';
+                preloadLink.as = 'image';
+                preloadLink.href = src;
+                document.head.appendChild(preloadLink);
+            }
+        });
+    };
+    
+    preloadCriticalImages();
+});
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual'; // Matikan restore otomatis dari browser
+}
+
+window.addEventListener('beforeunload', () => {
+  window.scrollTo(0, 0); // Pastikan posisi atas sebelum reload
+});
+
+window.addEventListener('load', () => {
+  window.scrollTo(0, 0); // Paksa ke atas saat load
+});
+</script>
+</body>
+</html>
