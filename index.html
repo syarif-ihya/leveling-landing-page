@@ -1,436 +1,1834 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leveling App - Transformasi Hidup Melalui Gamifikasi</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Ubah hidupmu menjadi petualangan nyata dengan Leveling App - Gamifikasi produktivitas personal">
-    <meta name="google-site-verification" content="LUgiVNlnnDEvlF3rcQEeg7tKZXEtz_lpQN6jSsrgJ48" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leveling App: Quest System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-void: #030507;
+    --bg-dark: #070d14;
+    --bg-card: #0b1420;
+    --bg-card-hover: #0f1c2e;
+    --border: rgba(99, 179, 237, 0.12);
+    --border-glow: rgba(99, 179, 237, 0.35);
+    --blue-core: #63b3ed;
+    --blue-bright: #90cdf4;
+    --blue-dim: rgba(99, 179, 237, 0.5);
+    --purple-accent: #9f7aea;
+    --gold-rank: #f6c90e;
+    --red-danger: #fc4444;
+    --text-primary: #e2e8f0;
+    --text-secondary: #718096;
+    --text-muted: #4a5568;
+    --glow-blue: 0 0 20px rgba(99, 179, 237, 0.4), 0 0 60px rgba(99, 179, 237, 0.1);
+    --glow-blue-strong: 0 0 30px rgba(99, 179, 237, 0.6), 0 0 80px rgba(99, 179, 237, 0.2);
+    --glow-gold: 0 0 20px rgba(246, 201, 14, 0.5), 0 0 60px rgba(246, 201, 14, 0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg-void); }
+  ::-webkit-scrollbar-thumb { background: var(--blue-dim); border-radius: 2px; }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(3, 5, 7, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: 0.15em;
+    color: var(--blue-core);
+    text-shadow: var(--glow-blue);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--blue-bright); }
+
+  .nav-cta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-core);
+    border: 1px solid var(--border-glow);
+    padding: 8px 20px;
+    text-decoration: none;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--blue-core);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .nav-cta:hover { color: var(--bg-void); box-shadow: var(--glow-blue); }
+  .nav-cta:hover::before { opacity: 1; }
+  .nav-cta span { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 120px 48px 80px;
+    overflow: hidden;
+  }
+
+  /* Radial glow bg */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(99, 179, 237, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Grid lines */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(99, 179, 237, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 179, 237, 0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 80%);
+  }
+
+  /* Floating particles */
+  .particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--blue-core);
+    border-radius: 50%;
+    animation: float-up linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes float-up {
+    0% { opacity: 0; transform: translateY(0) scale(0); }
+    10% { opacity: 1; }
+    80% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-400px) scale(1.5); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+  }
+
+  .system-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-glow);
+    padding: 6px 16px;
+    margin-bottom: 32px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--blue-core);
+    text-transform: uppercase;
+    animation: badge-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes badge-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(99, 179, 237, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(99, 179, 237, 0.5), 0 0 40px rgba(99, 179, 237, 0.1); }
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--blue-core);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 6px var(--blue-core);
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(36px, 7vw, 82px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .hero-title .line1 { color: var(--text-primary); display: block; }
+
+  .hero-title .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--blue-core) 0%, var(--purple-accent) 60%, var(--blue-bright) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(99, 179, 237, 0.4));
+  }
+
+  .hero-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .hero-desc {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(226, 232, 240, 0.7);
+    max-width: 600px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bg-void);
+    background: var(--blue-core);
+    border: none;
+    padding: 16px 36px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.4s;
+  }
+
+  .btn-primary:hover { box-shadow: var(--glow-blue-strong); transform: translateY(-2px); }
+  .btn-primary:hover::before { left: 100%; }
+
+  .btn-secondary {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 16px 36px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  }
+
+  .btn-secondary:hover { border-color: var(--border-glow); color: var(--blue-bright); }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stats-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(99, 179, 237, 0.03), transparent);
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--blue-core);
+    text-shadow: var(--glow-blue);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 48px; position: relative; }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 72px;
+  }
+
+  .section-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--blue-dim);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(24px, 4vw, 42px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .section-title span {
+    background: linear-gradient(135deg, var(--blue-core), var(--purple-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue-core), transparent);
+    margin: 20px auto 0;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-bg {
+    background: linear-gradient(180deg, var(--bg-void) 0%, var(--bg-dark) 50%, var(--bg-void) 100%);
+  }
+
+  .steps-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    position: relative;
+  }
+
+  .step-connector {
+    display: none;
+  }
+
+  .step-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue-core), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .step-card:hover { background: var(--bg-card-hover); border-color: var(--border-glow); transform: translateY(-4px); }
+  .step-card:hover::before { opacity: 1; }
+
+  .step-number {
+    font-family: 'Orbitron', monospace;
+    font-size: 72px;
+    font-weight: 900;
+    color: rgba(99, 179, 237, 0.06);
+    line-height: 1;
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    letter-spacing: -0.05em;
+  }
+
+  .step-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .step-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--blue-core);
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── ATTRIBUTES ── */
+  .attributes-section {
+    background: var(--bg-dark);
+  }
+
+  .attr-grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .attr-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 24px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .attr-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .attr-card[data-attr="STR"]::after { background: #fc4444; }
+  .attr-card[data-attr="INT"]::after { background: #63b3ed; }
+  .attr-card[data-attr="AGI"]::after { background: #68d391; }
+  .attr-card[data-attr="VIT"]::after { background: #f6ad55; }
+  .attr-card[data-attr="WIL"]::after { background: #9f7aea; }
+  .attr-card[data-attr="CHA"]::after { background: #fc8181; }
+  .attr-card[data-attr="CRE"]::after { background: #f6e05e; }
+  .attr-card[data-attr="AWR"]::after { background: #76e4f7; }
+
+  .attr-card:hover { background: var(--bg-card-hover); transform: translateY(-3px); }
+  .attr-card:hover::after { transform: scaleX(1); }
+
+  .attr-abbr {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .attr-card[data-attr="STR"] .attr-abbr { color: #fc4444; text-shadow: 0 0 15px rgba(252,68,68,0.4); }
+  .attr-card[data-attr="INT"] .attr-abbr { color: #63b3ed; text-shadow: 0 0 15px rgba(99,179,237,0.4); }
+  .attr-card[data-attr="AGI"] .attr-abbr { color: #68d391; text-shadow: 0 0 15px rgba(104,211,145,0.4); }
+  .attr-card[data-attr="VIT"] .attr-abbr { color: #f6ad55; text-shadow: 0 0 15px rgba(246,173,85,0.4); }
+  .attr-card[data-attr="WIL"] .attr-abbr { color: #9f7aea; text-shadow: 0 0 15px rgba(159,122,234,0.4); }
+  .attr-card[data-attr="CHA"] .attr-abbr { color: #fc8181; text-shadow: 0 0 15px rgba(252,129,129,0.4); }
+  .attr-card[data-attr="CRE"] .attr-abbr { color: #f6e05e; text-shadow: 0 0 15px rgba(246,224,94,0.4); }
+  .attr-card[data-attr="AWR"] .attr-abbr { color: #76e4f7; text-shadow: 0 0 15px rgba(118,228,247,0.4); }
+
+  .attr-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .attr-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── RANK SYSTEM ── */
+  .rank-section {
+    background: var(--bg-void);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rank-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', monospace;
+    font-size: 300px;
+    font-weight: 900;
+    color: rgba(99, 179, 237, 0.02);
+    user-select: none;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+  }
+
+  .rank-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rank-row {
+    display: grid;
+    grid-template-columns: 80px 120px 1fr 180px;
+    align-items: center;
+    gap: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rank-row::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .rank-row[data-rank="S"]::before { background: #f6c90e; }
+  .rank-row[data-rank="A"]::before { background: #9f7aea; }
+  .rank-row[data-rank="B"]::before { background: #63b3ed; }
+  .rank-row[data-rank="C"]::before { background: #68d391; }
+  .rank-row[data-rank="D"]::before { background: #a0aec0; }
+  .rank-row[data-rank="E"]::before { background: #718096; }
+  .rank-row[data-rank="F"]::before { background: #4a5568; }
+
+  .rank-row:hover { background: var(--bg-card-hover); border-color: var(--border-glow); }
+
+  .rank-badge {
+    font-family: 'Orbitron', monospace;
+    font-size: 32px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .rank-row[data-rank="S"] .rank-badge { color: var(--gold-rank); text-shadow: var(--glow-gold); }
+  .rank-row[data-rank="A"] .rank-badge { color: #9f7aea; text-shadow: 0 0 20px rgba(159,122,234,0.5); }
+  .rank-row[data-rank="B"] .rank-badge { color: #63b3ed; text-shadow: var(--glow-blue); }
+  .rank-row[data-rank="C"] .rank-badge { color: #68d391; }
+  .rank-row[data-rank="D"] .rank-badge { color: #a0aec0; }
+  .rank-row[data-rank="E"] .rank-badge { color: #718096; }
+  .rank-row[data-rank="F"] .rank-badge { color: #4a5568; }
+
+  .rank-level {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .rank-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .rank-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .rank-bar-wrap {
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .rank-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  .rank-row[data-rank="S"] .rank-bar { background: var(--gold-rank); width: 100%; box-shadow: var(--glow-gold); }
+  .rank-row[data-rank="A"] .rank-bar { background: #9f7aea; width: 86%; }
+  .rank-row[data-rank="B"] .rank-bar { background: #63b3ed; width: 70%; }
+  .rank-row[data-rank="C"] .rank-bar { background: #68d391; width: 51%; }
+  .rank-row[data-rank="D"] .rank-bar { background: #a0aec0; width: 30%; }
+  .rank-row[data-rank="E"] .rank-bar { background: #718096; width: 15%; }
+  .rank-row[data-rank="F"] .rank-bar { background: #4a5568; width: 5%; }
+
+  /* ── QUEST CARD MOCKUP ── */
+  .quest-section { background: var(--bg-dark); }
+
+  .quest-demo {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .quest-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .quest-card:hover { transform: translateY(-4px); border-color: var(--border-glow); }
+
+  .quest-card-type {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .quest-card-type::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--blue-dim);
+  }
+
+  .quest-card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .quest-card-goal {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .quest-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .quest-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid;
+  }
+
+  .quest-tag.tier-d { color: #a0aec0; border-color: rgba(160,174,192,0.3); background: rgba(160,174,192,0.05); }
+  .quest-tag.tier-c { color: #68d391; border-color: rgba(104,211,145,0.3); background: rgba(104,211,145,0.05); }
+  .quest-tag.diff-hard { color: #f6ad55; border-color: rgba(246,173,85,0.3); background: rgba(246,173,85,0.05); }
+  .quest-tag.diff-medium { color: #63b3ed; border-color: rgba(99,179,237,0.3); background: rgba(99,179,237,0.05); }
+  .quest-tag.type-main { color: #9f7aea; border-color: rgba(159,122,234,0.3); background: rgba(159,122,234,0.05); }
+  .quest-tag.type-side { color: #fc8181; border-color: rgba(252,129,129,0.3); background: rgba(252,129,129,0.05); }
+
+  /* SubQuest panel */
+  .subquest-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .subquest-title-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .subquest-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    background: rgba(99,179,237,0.03);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .subquest-item:hover { background: rgba(99,179,237,0.06); border-color: var(--border-glow); }
+  .subquest-item.active { border-color: var(--blue-dim); background: rgba(99,179,237,0.08); }
+  .subquest-item.completed { opacity: 0.5; }
+
+  .subquest-indicator {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border-glow);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .subquest-item.active .subquest-indicator {
+    border-color: var(--blue-core);
+    background: rgba(99,179,237,0.2);
+    animation: ring-pulse 2s infinite;
+  }
+
+  @keyframes ring-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(99,179,237,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(99,179,237,0); }
+  }
+
+  .subquest-item.completed .subquest-indicator {
+    border-color: #68d391;
+    background: rgba(104,211,145,0.2);
+    color: #68d391;
+  }
+
+  .subquest-text { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
+  .subquest-item.active .subquest-text { color: var(--text-primary); }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    padding: 36px 32px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .feature-card:hover { background: var(--bg-card-hover); }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99,179,237,0.6), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+    filter: grayscale(0.2);
+  }
+
+  .feature-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--blue-core);
+    margin-bottom: 12px;
+  }
+
+  .feature-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── DAILY SYSTEM ── */
+  .daily-section { background: var(--bg-dark); }
+
+  .daily-demo {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .daily-header {
+    background: rgba(99,179,237,0.06);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .daily-header-left { display: flex; flex-direction: column; gap: 4px; }
+
+  .daily-header-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .daily-streak {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-rank);
+    letter-spacing: 0.12em;
+    text-shadow: var(--glow-gold);
+  }
+
+  .daily-xp {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--blue-core);
+    text-shadow: var(--glow-blue);
+  }
+
+  .daily-tasks { padding: 20px 28px; display: flex; flex-direction: column; gap: 12px; }
+
+  .daily-task {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .daily-task:hover { background: rgba(99,179,237,0.04); border-color: var(--border-glow); }
+  .daily-task.done { opacity: 0.55; }
+
+  .task-checkbox {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border-glow);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s;
+  }
+
+  .daily-task.done .task-checkbox {
+    background: rgba(104,211,145,0.2);
+    border-color: #68d391;
+    color: #68d391;
+  }
+
+  .task-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+
+  .daily-task.done .task-text { text-decoration: line-through; }
+
+  .daily-progress {
+    padding: 16px 28px 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-core), var(--purple-accent));
+    border-radius: 2px;
+    width: 60%;
+    box-shadow: 0 0 10px rgba(99,179,237,0.4);
+    animation: progress-anim 3s ease-in-out infinite;
+  }
+
+  @keyframes progress-anim {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    background: var(--bg-void);
+    text-align: center;
+    padding: 120px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(99,179,237,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 5vw, 56px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .cta-title .highlight {
+    background: linear-gradient(135deg, var(--blue-core), var(--purple-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cta-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    text-transform: uppercase;
+  }
+
+  .store-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .store-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: all 0.3s;
+    color: var(--text-primary);
+  }
+
+  .store-btn:hover { background: var(--bg-card-hover); box-shadow: var(--glow-blue); transform: translateY(-2px); }
+
+  .store-btn-icon { font-size: 24px; }
+  .store-btn-text-small {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    display: block;
+  }
+  .store-btn-text-big {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+  }
+
+  .cta-note {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: var(--blue-dim);
+    text-transform: uppercase;
+  }
+
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--blue-core); }
+
+  /* ── SYSTEM NOTIFICATION MODAL EFFECT (decorative) ── */
+  .system-notif-demo {
+    max-width: 480px;
+    margin: 0 auto 60px;
+    background: linear-gradient(135deg, rgba(11,20,32,0.95), rgba(7,13,20,0.98));
+    border: 1px solid var(--border-glow);
+    padding: 32px;
+    position: relative;
+    text-align: left;
+    box-shadow: var(--glow-blue);
+  }
+
+  .system-notif-demo::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue-core), transparent);
+  }
+
+  .notif-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--blue-core);
+    text-transform: uppercase;
+    text-shadow: var(--glow-blue);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .notif-title::before {
+    content: '';
+    display: inline-block;
+    width: 30px; height: 1px;
+    background: var(--blue-core);
+  }
+
+  .notif-text {
+    font-size: 16px;
+    color: var(--text-primary);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .notif-text em {
+    font-style: normal;
+    color: var(--blue-bright);
+    font-weight: 600;
+  }
+
+  .notif-attrs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .notif-attr-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .notif-attr-name { width: 40px; color: var(--text-muted); }
+
+  .notif-attr-bar-wrap {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .notif-attr-bar {
+    height: 100%;
+    border-radius: 2px;
+    animation: bar-fill 2s ease forwards;
+    animation-delay: var(--delay, 0s);
+    width: 0%;
+  }
+
+  @keyframes bar-fill {
+    to { width: var(--target, 50%); }
+  }
+
+  .notif-attr-val { width: 60px; text-align: right; }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 72px 24px; }
+    .stats-bar { gap: 32px; flex-wrap: wrap; padding: 20px 24px; }
+    .steps-container { grid-template-columns: 1fr; }
+    .attr-grid { grid-template-columns: repeat(2, 1fr); }
+    .rank-row { grid-template-columns: 60px 100px 1fr; }
+    .rank-bar-wrap { display: none; }
+    .quest-demo { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .hero { padding: 100px 20px 60px; }
+    .hero-title { font-size: 32px; }
+    .attr-grid { grid-template-columns: repeat(2, 1fr); }
+    .rank-row { grid-template-columns: 50px 1fr; }
+    .rank-level { display: none; }
+    .store-btns { flex-direction: column; align-items: center; }
+  }
+</style>
 </head>
+
 <body>
-    <div class="app-container">
-        <header class="hero">
-            <nav class="main-nav" id="mainNav">
-                <div class="logo">
-                    <img src="images/leveling-app-logo.png" alt="Logo Leveling App" class="logo-img">
-                    Leveling App
-                </div>
-                <div class="hamburger" id="menuToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="#features">Fitur</a></li>
-                    <li><a href="#screenshots">Tampilan</a></li>
-                    <li><a href="#testimonials">Testimoni</a></li>
-                    <li><a href="#download" class="nav-cta">Mulai Sekarang</a></li>
-                </ul>
-                <div class="mobile-overlay" id="mobileOverlay"></div>
-            </nav>
-        <div class="hero-content">
-            <h1 class="fade-in">Hidupmu, Level Selanjutnya</h1>
-            <p class="subheading fade-in">Transformasikan produktivitas seperti menaiki level di game RPG!</p>
-            <div class="hero-cta slide-up">
-                <a href="#download" class="btn-primary">📲 Mulai Perjalanan</a>
-                <a href="#features" class="btn-secondary">Pelajari Lebih Lanjut</a>
-            </div>
-        </div>
-    </header>
 
-    <section id="features" class="features">
-        <div class="section-header">
-            <h2>🔥 Fitur Revolusioner</h2>
-            <p>Merubah tantangan hidup menjadi petualangan seru</p>
-        </div>
-        <div class="feature-grid">
-            <div class="feature-box" data-tilt>
-                <div class="feature-icon">
-                    <img src="images/quest-icon.png" alt="Fitur Quest" />
-                </div>
-                <h3>Customize Quest</h3>
-                <p>Sistem quest yang dapat disesuaikan untuk memaksimalkan potensi pribadimu.</p>
-            </div>
-            <div class="feature-box" data-tilt>
-                <div class="feature-icon">
-                    <img src="images/skill-icon.webp" alt="Fitur Skill Tree" />
-                </div>
-                <h3>Attributes and Skills</h3>
-                <p>Kembangkan keahlianmu dengan sistem progression RPG yang inovatif.</p>
-            </div>
-            <div class="feature-box" data-tilt>
-                <div class="feature-icon">
-                    <img src="images/xp-icon.webp" alt="Fitur Reward" />
-                </div>
-                <h3>Reward Ecosystem</h3>
-                <p>Tukar Time Currency dengan hadiah digital dan penghargaan nyata.</p>
-            </div>
-            <div class="feature-box" data-tilt>
-                <div class="feature-icon">
-                    <img src="images/chart-icon.png" alt="Fitur Analitik" />
-                </div>
-                <h3>Analitik Pribadi</h3>
-                <p>Lacak perkembanganmu dengan dashboard intuitif dan mendalam.</p>
-            </div>
-            <div class="feature-box" data-tilt>
-                <div class="feature-icon">
-                    <img src="images/todo-icon.png" alt="Fitur TodoList" />
-                </div>
-                <h3>ToDo List</h3>
-                <p>Catat daftar tugas yang akan kamu lakukan.</p>
-            </div>
-            <div class="feature-box" data-tilt>
-                <div class="feature-icon">
-                    <img src="images/time-icon.png" alt="Fitur Item" />
-                </div>
-                <h3>Time Management</h3>
-                <p>Gunakan item bertipe TIMER sebagai alat memanajemen waktu.</p>
-            </div>
-        </div>
-    </section>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Leveling App</div>
+  <ul class="nav-links">
+    <li><a href="#how">System</a></li>
+    <li><a href="#attributes">Attributes</a></li>
+    <li><a href="#rank">Ranks</a></li>
+    <li><a href="#quest">Quests</a></li>
+    <li><a href="#daily">Daily</a></li>
+  </ul>
+  <a href="#download" class="nav-cta"><span>Download</span></a>
+</nav>
 
-    <section id="screenshots" class="screenshots">
-        <div class="section-header">
-            <h2>📱 Jelajahi Antarmuka</h2>
-            <p>Pengalaman gamifikasi yang mulus dan intuitif</p>
-        </div>
-        <div class="screenshot-gallery">
-            <div class="screenshot-item">
-                <img src="images/QuestScreen1.5.0.jpg" alt="Tampilan Quest Harian" loading="lazy">
-                <span>Quest List</span>
-            </div>
-            <div class="screenshot-item">
-                <img src="images/StatusScreen1.5.0.jpg" alt="Profil Pengguna" loading="lazy">
-                <span>Profil & Level</span>
-            </div>
-            <div class="screenshot-item">
-                <img src="images/ItemScreen1.5.0.jpg" alt="Toko Reward" loading="lazy">
-                <span>Inventaris dan Toko</span>
-            </div>
-        </div>
-    </section>
+<!-- PARTICLES -->
+<div class="particles" id="particles"></div>
 
-    <section id="testimonials" class="testimonials">
-        <div class="section-header">
-            <h2>💬 Apa Kata Mereka</h2>
-            <p>Inspirasi dari komunitas pengguna kami</p>
-        </div>
-        <div class="testimonial-slider">
-            <div class="testimonial-card">
-                <p>"Leveling App mengubah cara saya melihat produktivitas. Sekarang hidup terasa seperti game yang menantang!"</p>
-                <div class="testimonial-author">
-                    <img src="images/Hinatashoyo.jpg" alt="Testimonial Avatar" loading="lazy">
-                    <span>Syarif, Developer LevelingApp</span>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="system-badge">
+      <span class="badge-dot"></span>
+      System Online — Quest Protocol Active
+    </div>
+    <h1 class="hero-title">
+      <span class="line1">Arise,</span>
+      <span class="line2">Player.</span>
+    </h1>
+    <p class="hero-sub">Real Life · RPG System · Personal Leveling</p>
+    <p class="hero-desc">
+      The System has recognized you. Turn your actual goals into quests. 
+      Earn real XP. Level up attributes. Rise through the ranks — in real life.
+    </p>
+    <div class="hero-cta-group">
+      <a href="#download" class="btn-primary">
+        ◈ Begin Your Journey
+      </a>
+      <a href="#how" class="btn-secondary">
+        ▶ How It Works
+      </a>
+    </div>
+  </div>
+</section>
 
-    <section id="download" class="download">
-        <div class="download-content">
-            <h2>🚀 Siap Memulai Petualangan?</h2>
-            <p>Bergabunglah dengan ribuan pengguna yang telah mentransformasi hidupnya.</p>
-            <div class="download-buttons">
-                <a href="#" class="btn-primary">
-                    <img src="images/playstore-icon.svg" alt="Google Play" class="button-icon" />
-                    Google Play
-                </a>
-                <a href="#" class="btn-primary">
-                    <img src="images/apple-icon.png" alt="App Store" class="button-icon" />
-                    App Store
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <p>© 2025 Leveling App</p>
-            </div>
-            <div class="footer-links">
-                <a href="privacy.html">Privasi</a>
-                <a href="terms.html">Syarat</a>
-                <a href="mailto:shirin.dev.app@gmail.com">Kontak</a>
-            </div>
-            <div class="footer-social">
-                <a href="https://instagram.com/levelingapp" target="_blank" rel="noopener">
-                    <img src="images/instagram-icon.webp" alt="Instagram" style="width:24px; height:24px;" />
-                </a>
-                <a href="https://www.tiktok.com/@levelingapp.xp" target="_blank" rel="noopener">
-                    <img src="images/tiktok-icon.svg" alt="TikTok" style="width:24px; height:24px;" />
-                </a>
-                <a href="https://discord.gg/jkTJ44tCwx" target="_blank" rel="noopener">
-                    <img src="images/discord-icon.png" alt="Discord" style="width:24px; height:24px;" />
-                </a>
-                <a href="https://drive.google.com/drive/folders/1zARf6wWe3akeQZwjjaogf814FpI2QJQM" target="_blank" rel="noopener">
-                    <img src="images/drive-icon.png" alt="Drive" style="width:24px; height:24px;" />
-                </a>
-            </div>
-        </div>
-    </footer>
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-num">8</span>
+    <span class="stat-label">Attributes</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">7</span>
+    <span class="stat-label">Rank Tiers</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">AI</span>
+    <span class="stat-label">Quest System</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">∞</span>
+    <span class="stat-label">Potential</span>
+  </div>
 </div>
 
+<!-- HOW IT WORKS -->
+<section class="how-bg" id="how">
+  <div class="section-header reveal">
+    <span class="section-tag">[ System Protocol ]</span>
+    <h2 class="section-title">How The <span>System</span> Works</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- System Notification Mockup -->
+  <div class="system-notif-demo reveal">
+    <div class="notif-title">System Notification</div>
+    <p class="notif-text">
+      The System has detected your profile. Based on your <em>skills</em>, <em>goals</em>, 
+      and real-world evidence — your initial attributes have been assigned. 
+      Your journey begins now, <em>Player</em>.
+    </p>
+    <div class="notif-attrs">
+      <div class="notif-attr-row">
+        <span class="notif-attr-name">INT</span>
+        <div class="notif-attr-bar-wrap">
+          <div class="notif-attr-bar" style="background:#63b3ed; --target:65%; --delay:0.2s;"></div>
+        </div>
+        <span class="notif-attr-val" style="color:#63b3ed">Lv 24 / D</span>
+      </div>
+      <div class="notif-attr-row">
+        <span class="notif-attr-name">WIL</span>
+        <div class="notif-attr-bar-wrap">
+          <div class="notif-attr-bar" style="background:#9f7aea; --target:45%; --delay:0.4s;"></div>
+        </div>
+        <span class="notif-attr-val" style="color:#9f7aea">Lv 18 / D</span>
+      </div>
+      <div class="notif-attr-row">
+        <span class="notif-attr-name">CRE</span>
+        <div class="notif-attr-bar-wrap">
+          <div class="notif-attr-bar" style="background:#f6e05e; --target:38%; --delay:0.6s;"></div>
+        </div>
+        <span class="notif-attr-val" style="color:#f6e05e">Lv 12 / E</span>
+      </div>
+      <div class="notif-attr-row">
+        <span class="notif-attr-name">AWR</span>
+        <div class="notif-attr-bar-wrap">
+          <div class="notif-attr-bar" style="background:#76e4f7; --target:55%; --delay:0.8s;"></div>
+        </div>
+        <span class="notif-attr-val" style="color:#76e4f7">Lv 20 / D</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps-container">
+    <div class="step-card reveal">
+      <span class="step-number">01</span>
+      <span class="step-icon">🧬</span>
+      <div class="step-title">Onboarding</div>
+      <p class="step-desc">
+        Tell the System your goal, your skills, and your resources. The AI reads your profile 
+        — not just what you say, but <em>how</em> you say it — and assigns your starting attributes 
+        based on real evidence.
+      </p>
+    </div>
+    <div class="step-card reveal" style="transition-delay:0.15s">
+      <span class="step-number">02</span>
+      <span class="step-icon">⚔️</span>
+      <div class="step-title">Accept Quests</div>
+      <p class="step-desc">
+        The System generates quests tailored to your current capability. Each quest has 
+        a specific measurable goal, a real deadline, and step-by-step sub-quests that 
+        adapt to your progress and feedback.
+      </p>
+    </div>
+    <div class="step-card reveal" style="transition-delay:0.3s">
+      <span class="step-number">03</span>
+      <span class="step-icon">⬆️</span>
+      <div class="step-title">Level Up</div>
+      <p class="step-desc">
+        Complete sub-quests, earn XP, unlock skills, rise in rank. The System 
+        re-evaluates you as your attributes grow. Branch quests open new paths. 
+        Your real-world growth becomes your character sheet.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ATTRIBUTES -->
+<section class="attributes-section" id="attributes">
+  <div class="section-header reveal">
+    <span class="section-tag">[ Character Stats ]</span>
+    <h2 class="section-title">Your <span>8 Attributes</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="attr-grid reveal">
+    <div class="attr-card" data-attr="STR">
+      <span class="attr-abbr">STR</span>
+      <span class="attr-name">Strength</span>
+      <p class="attr-desc">Physical capability, manual labor, body-intensive output</p>
+    </div>
+    <div class="attr-card" data-attr="INT">
+      <span class="attr-abbr">INT</span>
+      <span class="attr-name">Intelligence</span>
+      <p class="attr-desc">Learning speed, problem-solving, technical depth</p>
+    </div>
+    <div class="attr-card" data-attr="AGI">
+      <span class="attr-abbr">AGI</span>
+      <span class="attr-name">Agility</span>
+      <p class="attr-desc">Adaptability, multitasking, coordination under pressure</p>
+    </div>
+    <div class="attr-card" data-attr="VIT">
+      <span class="attr-abbr">VIT</span>
+      <span class="attr-name">Vitality</span>
+      <p class="attr-desc">Physical health, stamina, consistency in physical habits</p>
+    </div>
+    <div class="attr-card" data-attr="WIL">
+      <span class="attr-abbr">WIL</span>
+      <span class="attr-name">Willpower</span>
+      <p class="attr-desc">Discipline, follow-through, persistence under resistance</p>
+    </div>
+    <div class="attr-card" data-attr="CHA">
+      <span class="attr-abbr">CHA</span>
+      <span class="attr-name">Charisma</span>
+      <p class="attr-desc">Communication, persuasion, leadership presence</p>
+    </div>
+    <div class="attr-card" data-attr="CRE">
+      <span class="attr-abbr">CRE</span>
+      <span class="attr-name">Creativity</span>
+      <p class="attr-desc">Original thinking, design sensibility, innovative output</p>
+    </div>
+    <div class="attr-card" data-attr="AWR">
+      <span class="attr-abbr">AWR</span>
+      <span class="attr-name">Awareness</span>
+      <p class="attr-desc">Self-awareness, strategic thinking, pattern recognition</p>
+    </div>
+  </div>
+</section>
+
+<!-- RANK SYSTEM -->
+<section class="rank-section" id="rank">
+  <div class="rank-bg-text">RANK</div>
+  <div class="section-header reveal">
+    <span class="section-tag">[ Hierarchy System ]</span>
+    <h2 class="section-title"><span>Rank</span> Classification</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="rank-grid reveal">
+    <div class="rank-row" data-rank="S">
+      <div class="rank-badge">S</div>
+      <div class="rank-level">Lv 91–100</div>
+      <div>
+        <div class="rank-title">Master</div>
+        <div class="rank-desc">Exceptional, rare proficiency. Sets the standard.</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar"></div></div>
+    </div>
+    <div class="rank-row" data-rank="A">
+      <div class="rank-badge">A</div>
+      <div class="rank-level">Lv 71–90</div>
+      <div>
+        <div class="rank-title">Expert</div>
+        <div class="rank-desc">High capability, quality output, minimal guidance.</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar"></div></div>
+    </div>
+    <div class="rank-row" data-rank="B">
+      <div class="rank-badge">B</div>
+      <div class="rank-level">Lv 51–70</div>
+      <div>
+        <div class="rank-title">Advanced</div>
+        <div class="rank-desc">Handles complex scenarios, demonstrates real depth.</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar"></div></div>
+    </div>
+    <div class="rank-row" data-rank="C">
+      <div class="rank-badge">C</div>
+      <div class="rank-level">Lv 31–50</div>
+      <div>
+        <div class="rank-title">Intermediate</div>
+        <div class="rank-desc">Solid foundation, consistent application.</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar"></div></div>
+    </div>
+    <div class="rank-row" data-rank="D">
+      <div class="rank-badge">D</div>
+      <div class="rank-level">Lv 16–30</div>
+      <div>
+        <div class="rank-title">Novice</div>
+        <div class="rank-desc">Applies fundamentals independently. Real work done.</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar"></div></div>
+    </div>
+    <div class="rank-row" data-rank="E">
+      <div class="rank-badge">E</div>
+      <div class="rank-level">Lv 6–15</div>
+      <div>
+        <div class="rank-title">Beginner</div>
+        <div class="rank-desc">Aware of the domain, some exposure, basic execution.</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar"></div></div>
+    </div>
+    <div class="rank-row" data-rank="F">
+      <div class="rank-badge">F</div>
+      <div class="rank-level">Lv 1–5</div>
+      <div>
+        <div class="rank-title">Unranked</div>
+        <div class="rank-desc">No meaningful experience. The starting point.</div>
+      </div>
+      <div class="rank-bar-wrap"><div class="rank-bar"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUEST SYSTEM -->
+<section class="quest-section" id="quest">
+  <div class="section-header reveal">
+    <span class="section-tag">[ Quest Protocol ]</span>
+    <h2 class="section-title"><span>Active</span> Quest Board</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="quest-demo reveal">
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="quest-card">
+        <div class="quest-card-type">Main Quest</div>
+        <div class="quest-card-title">Build & Launch a Web Portfolio</div>
+        <div class="quest-card-goal">Deploy a functional portfolio showcasing at least 3 real projects with a live URL and a working contact form.</div>
+        <div class="quest-meta">
+          <span class="quest-tag tier-d">D-Tier</span>
+          <span class="quest-tag diff-hard">Hard</span>
+          <span class="quest-tag type-main">Main</span>
+        </div>
+      </div>
+      <div class="quest-card">
+        <div class="quest-card-type">Side Quest</div>
+        <div class="quest-card-title">Cold Outreach Experiment</div>
+        <div class="quest-card-goal">Send 5 personalized cold emails to potential clients. Track response rate and adjust pitch based on data.</div>
+        <div class="quest-meta">
+          <span class="quest-tag tier-c">C-Tier</span>
+          <span class="quest-tag diff-medium">Medium</span>
+          <span class="quest-tag type-side">Side</span>
+        </div>
+      </div>
+    </div>
+    <div class="subquest-panel">
+      <div class="subquest-title-label">Sub-Quest Chain — Portfolio Quest</div>
+      <div class="subquest-item completed">
+        <div class="subquest-indicator">✓</div>
+        <div class="subquest-text">Set up repository and deploy starter template to Vercel</div>
+      </div>
+      <div class="subquest-item completed">
+        <div class="subquest-indicator">✓</div>
+        <div class="subquest-text">Design and code the homepage hero section with responsive layout</div>
+      </div>
+      <div class="subquest-item active">
+        <div class="subquest-indicator"></div>
+        <div class="subquest-text"><strong style="color:var(--blue-bright)">Active →</strong> Add 3 project case studies with live screenshots and tech stack details</div>
+      </div>
+      <div class="subquest-item">
+        <div class="subquest-indicator"></div>
+        <div class="subquest-text">Implement contact form with backend validation and email delivery</div>
+      </div>
+      <div class="subquest-item">
+        <div class="subquest-indicator"></div>
+        <div class="subquest-text">SEO audit and final deployment — share the URL publicly</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section style="background: var(--bg-void);" id="features">
+  <div class="section-header reveal">
+    <span class="section-tag">[ System Features ]</span>
+    <h2 class="section-title">Designed to <span>Level You Up</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <span class="feature-icon">🤖</span>
+      <div class="feature-title">AI Quest Engine</div>
+      <p class="feature-desc">Every quest is generated by AI specifically for your profile, your current skills, and your stated goal. No templates. No filler.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔀</span>
+      <div class="feature-title">Branch Quest System</div>
+      <p class="feature-desc">Complete a quest and the System analyzes what you built. Successor, Exploration, or Mastery — your next path adapts to what you actually did.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <div class="feature-title">Real Attribute Growth</div>
+      <p class="feature-desc">XP distributes across 8 attributes based on the nature of your work. A coding quest builds INT. A public speaking quest builds CHA. Growth is specific.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🧠</span>
+      <div class="feature-title">Honest Rank System</div>
+      <p class="feature-desc">Your rank is earned, not given. The System won't flatter you. Re-evaluation is triggered by real completed quests — not by asking nicely.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💀</span>
+      <div class="feature-title">Failure Is Data</div>
+      <p class="feature-desc">Failed quests generate recovery branches. The System analyzes why you failed — scope, motivation, or capability — and calibrates the next attempt accordingly.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🪙</span>
+      <div class="feature-title">Resource Collection</div>
+      <p class="feature-desc">Real-world outputs — deployed projects, certificates, new connections — become Resources in your profile. Your privileges grow as you complete quests.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DAILY SYSTEM -->
+<section class="daily-section" id="daily">
+  <div class="section-header reveal">
+    <span class="section-tag">[ Routine Protocol ]</span>
+    <h2 class="section-title"><span>Daily</span> Programs</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="reveal" style="text-align:center; margin-bottom:40px;">
+    <p style="font-size:17px; color:var(--text-secondary); max-width:600px; margin:0 auto; line-height:1.8;">
+      Quests are focused missions. Daily Programs are your baseline — recurring routines 
+      that build habits and compound progress over time. Streaks multiply your XP.
+    </p>
+  </div>
+  <div class="daily-demo reveal">
+    <div class="daily-header">
+      <div class="daily-header-left">
+        <div class="daily-header-title">Frontend Drills</div>
+        <div class="daily-streak">🔥 14-Day Streak — 1.6× Multiplier</div>
+      </div>
+      <div class="daily-xp">+96 XP</div>
+    </div>
+    <div class="daily-tasks">
+      <div class="daily-task done">
+        <div class="task-checkbox">✓</div>
+        <div class="task-text">Build 1 UI component from scratch (no framework)</div>
+      </div>
+      <div class="daily-task done">
+        <div class="task-checkbox">✓</div>
+        <div class="task-text">Read 1 CSS/JS article and implement one concept</div>
+      </div>
+      <div class="daily-task">
+        <div class="task-checkbox"></div>
+        <div class="task-text">Complete 1 lesson on your current course platform</div>
+      </div>
+      <div class="daily-task">
+        <div class="task-checkbox"></div>
+        <div class="task-text">Write a short dev log — what you built, what you learned</div>
+      </div>
+      <div class="daily-task">
+        <div class="task-checkbox"></div>
+        <div class="task-text">Push at least 1 commit to your active project</div>
+      </div>
+    </div>
+    <div class="daily-progress">
+      <div class="progress-label">
+        <span>Progress</span>
+        <span>2 / 5 tasks</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / DOWNLOAD -->
+<section class="cta-section" id="download">
+  <div class="cta-glow"></div>
+  <div class="system-badge" style="margin-bottom:28px;">
+    <span class="badge-dot"></span>
+    The System Is Ready
+  </div>
+  <h2 class="cta-title">
+    Your Rank Starts At <span class="highlight">Zero.</span><br>
+    Where It Ends Is Up To You.
+  </h2>
+  <p class="cta-sub">Download the app. Complete the onboarding. Accept your first quest.</p>
+  <div class="store-btns">
+    <a href="#" class="store-btn">
+      <span class="store-btn-icon">⬛</span>
+      <div>
+        <span class="store-btn-text-small">Get it on</span>
+        <span class="store-btn-text-big">Google Play</span>
+      </div>
+    </a>
+    <a href="#" class="store-btn">
+      <span class="store-btn-icon">◆</span>
+      <div>
+        <span class="store-btn-text-small">Download on the</span>
+        <span class="store-btn-text-big">App Store</span>
+      </div>
+    </a>
+  </div>
+  <p class="cta-note">Free to download &nbsp;·&nbsp; Android &amp; iOS &nbsp;·&nbsp; No subscription required</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Leveling App: Quest System</div>
+  <div class="footer-copy">© 2025 Leveling App. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
 <script>
-    // Enhanced animations and interactions
-document.addEventListener('DOMContentLoaded', () => {
-    // Hamburger menu functionality
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
-    const mobileOverlay = document.getElementById('mobileOverlay');
-    
-    // Toggle mobile menu
-    if (menuToggle) {
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileOverlay.classList.toggle('active');
-            document.body.classList.toggle('no-scroll');
-            
-            // Toggle hamburger animation
-            menuToggle.classList.toggle('active');
-        });
-    }
-    
-    // Close menu when clicking on a link or overlay
-    const navLinksItems = document.querySelectorAll('.nav-links a');
-    navLinksItems.forEach(item => {
-        item.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            mobileOverlay.classList.remove('active');
-            document.body.classList.remove('no-scroll');
-            if (menuToggle) menuToggle.classList.remove('active');
-        });
-    });
-    
-    if (mobileOverlay) {
-        mobileOverlay.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            mobileOverlay.classList.remove('active');
-            document.body.classList.remove('no-scroll');
-            if (menuToggle) menuToggle.classList.remove('active');
-        });
-    }
-    
-    // Shrink navigation on scroll
-    const mainNav = document.getElementById('mainNav');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            mainNav.classList.add('scrolled-nav');
-        } else {
-            mainNav.classList.remove('scrolled-nav');
-        }
-    });
+  // ── PARTICLES
+  const container = document.getElementById('particles');
+  const PARTICLE_COUNT = 30;
 
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                const navHeight = document.querySelector('.main-nav').offsetHeight;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-    
-    // Track elements that have already been animated
-    const animatedElements = new Set();
-    
-    // Animate elements on scroll
-    const featureBoxes = document.querySelectorAll('.feature-box');
-    const screenshotItems = document.querySelectorAll('.screenshot-item');
-    const testimonialCard = document.querySelector('.testimonial-card');
-    
-    // Set initial state for scroll animations - but only do this once
-    featureBoxes.forEach(box => {
-        box.style.opacity = '0';
-        box.style.transform = 'translateY(30px)';
-        box.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    });
-    
-    screenshotItems.forEach(item => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(30px)';
-        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    });
-    
-    if (testimonialCard) {
-        testimonialCard.style.opacity = '0';
-        testimonialCard.style.transform = 'translateY(30px)';
-        testimonialCard.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = '-10px';
+    p.style.animationDuration = (6 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 12) + 's';
+    p.style.opacity = Math.random() * 0.8;
+    if (Math.random() > 0.7) {
+      p.style.background = '#9f7aea';
+      p.style.width = '3px'; p.style.height = '3px';
     }
-    
-    // Improved scroll-based animation function
-    const animateOnScroll = () => {
-        // Animate feature boxes if not already animated
-        featureBoxes.forEach(box => {
-            if (!animatedElements.has(box)) {
-                const boxPosition = box.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.3;
-                
-                if(boxPosition < screenPosition) {
-                    box.style.opacity = '1';
-                    box.style.transform = 'translateY(0)';
-                    // Mark as animated so we don't re-animate
-                    animatedElements.add(box);
-                }
-            }
-        });
-        
-        // Animate screenshot items if not already animated
-        screenshotItems.forEach((item, index) => {
-            if (!animatedElements.has(item)) {
-                const itemPosition = item.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if(itemPosition < screenPosition) {
-                    setTimeout(() => {
-                        item.style.opacity = '1';
-                        item.style.transform = 'translateY(0)';
-                        // Mark as animated
-                        animatedElements.add(item);
-                    }, index * 200); // Staggered animation
-                }
-            }
-        });
-        
-        // Animate testimonial card if not already animated
-        if (testimonialCard && !animatedElements.has(testimonialCard)) {
-            const cardPosition = testimonialCard.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.2;
-            
-            if(cardPosition < screenPosition) {
-                testimonialCard.style.opacity = '1';
-                testimonialCard.style.transform = 'translateY(0)';
-                // Mark as animated
-                animatedElements.add(testimonialCard);
-            }
-        }
-    };
-    
-    // Run animation check on scroll
-    window.addEventListener('scroll', animateOnScroll);
-    
-    // Run once on load to check for elements already in view
-    animateOnScroll();
-    
-    // Add hover effects to feature boxes
-    featureBoxes.forEach(box => {
-        let originalTransform = '';
-        
-        box.addEventListener('mouseenter', () => {
-            // Store the current transform before applying hover effect
-            originalTransform = box.style.transform;
-            
-            // Only apply hover effect if the box has already been animated
-            if (animatedElements.has(box)) {
-                box.style.transform = 'translateY(-10px)';
-            }
-        });
-        
-        box.addEventListener('mouseleave', () => {
-            // Revert to original transform (either the animated state or the initial state)
-            if (animatedElements.has(box)) {
-                box.style.transform = 'translateY(0)';
-            } else {
-                box.style.transform = originalTransform;
-            }
-        });
+    container.appendChild(p);
+  }
+
+  // ── SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
     });
-    
-    // Add simple tilt effect to feature boxes (if not on mobile)
-    if (window.innerWidth > 768) {
-        featureBoxes.forEach(box => {
-            box.addEventListener('mousemove', (e) => {
-                // Only apply tilt effect if the box has already been animated
-                if (animatedElements.has(box)) {
-                    const boxRect = box.getBoundingClientRect();
-                    const boxCenterX = boxRect.left + boxRect.width / 2;
-                    const boxCenterY = boxRect.top + boxRect.height / 2;
-                    
-                    const xRotation = ((e.clientY - boxCenterY) / 10) * -1;
-                    const yRotation = (e.clientX - boxCenterX) / 10;
-                    
-                    box.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.05)`;
-                }
-            });
-            
-            box.addEventListener('mouseleave', () => {
-                // Revert to animated state (not initial state) if the box was animated
-                if (animatedElements.has(box)) {
-                    box.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-                }
-            });
-        });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // ── SMOOTH SCROLL for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // ── DAILY TASK TOGGLE (interactive demo)
+  document.querySelectorAll('.daily-task').forEach(task => {
+    task.addEventListener('click', () => {
+      task.classList.toggle('done');
+      const cb = task.querySelector('.task-checkbox');
+      cb.textContent = task.classList.contains('done') ? '✓' : '';
+      updateDailyProgress();
+    });
+  });
+
+  function updateDailyProgress() {
+    const tasks = document.querySelectorAll('.daily-task');
+    const done = document.querySelectorAll('.daily-task.done').length;
+    const total = tasks.length;
+    const pct = (done / total) * 100;
+    document.querySelector('.progress-fill').style.width = pct + '%';
+    document.querySelector('.progress-label span:last-child').textContent = done + ' / ' + total + ' tasks';
+    const xpBase = 80;
+    const streakMult = 1.6;
+    const progMult = done / total;
+    document.querySelector('.daily-xp').textContent = '+' + Math.round(xpBase * streakMult * (done === total ? 1 : 0.5)) + ' XP';
+  }
+
+  // ── NAV SCROLL STATE
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 80) {
+      nav.style.borderBottomColor = 'rgba(99,179,237,0.15)';
+    } else {
+      nav.style.borderBottomColor = 'rgba(99, 179, 237, 0.12)';
     }
-    
-    // Function to ensure all elements are visible after page has been loaded for a while
-    // This is a safety measure to ensure elements don't stay hidden
-    const ensureVisibility = () => {
-        featureBoxes.forEach(box => {
-            box.style.opacity = '1';
-            box.style.transform = 'translateY(0)';
-            animatedElements.add(box);
-        });
-        
-        screenshotItems.forEach(item => {
-            item.style.opacity = '1';
-            item.style.transform = 'translateY(0)';
-            animatedElements.add(item);
-        });
-        
-        if (testimonialCard) {
-            testimonialCard.style.opacity = '1';
-            testimonialCard.style.transform = 'translateY(0)';
-            animatedElements.add(testimonialCard);
-        }
-    };
-    
-    // After a certain time, make sure all elements are visible (5 seconds)
-    setTimeout(ensureVisibility, 5000);
-    
-    // Add preloading for images
-    const preloadCriticalImages = () => {
-        const criticalImages = document.querySelectorAll('.hero img, .logo-img');
-        criticalImages.forEach(img => {
-            const src = img.getAttribute('src');
-            if (src) {
-                const preloadLink = document.createElement('link');
-                preloadLink.rel = 'preload';
-                preloadLink.as = 'image';
-                preloadLink.href = src;
-                document.head.appendChild(preloadLink);
-            }
-        });
-    };
-    
-    preloadCriticalImages();
-});
+  });
 
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual'; // Matikan restore otomatis dari browser
-}
-
-window.addEventListener('beforeunload', () => {
-  window.scrollTo(0, 0); // Pastikan posisi atas sebelum reload
-});
-
-window.addEventListener('load', () => {
-  window.scrollTo(0, 0); // Paksa ke atas saat load
-});
+  // ── TYPING EFFECT for hero sub
+  const heroSub = document.querySelector('.hero-sub');
+  const originalText = heroSub.textContent;
+  heroSub.textContent = '';
+  let i = 0;
+  setTimeout(() => {
+    const type = setInterval(() => {
+      heroSub.textContent += originalText[i];
+      i++;
+      if (i >= originalText.length) clearInterval(type);
+    }, 45);
+  }, 800);
 </script>
 </body>
 </html>
